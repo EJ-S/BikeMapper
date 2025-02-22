@@ -11,4 +11,6 @@ npm run dev
 ```
 firebase deploy --only hosting
 ```
-![image](https://github.com/user-attachments/assets/0493560b-1350-4474-ad54-fa1fa2be303c)
+
+#JSON DB SCHEMA
+![image](https://github.com/user-attachments/assets/fe3a1e8d-8305-4ee1-92f9-8937d21b784a)
