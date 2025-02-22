@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,6 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current route
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleMenuOpen = (event) => {
@@ -20,6 +21,13 @@ export default function Navbar() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  // Dynamically set the Navbar title based on the current page
+  const getTitle = () => {
+    if (location.pathname === "/") return "Map App";
+    if (location.pathname === "/route-planner") return "Route Planner";
+    return "Map App"; // Default title if needed
   };
 
   return (
@@ -59,7 +67,7 @@ export default function Navbar() {
             </MenuItem>
           </Menu>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Map App
+            {getTitle()} {/* Dynamically updates based on the route */}
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
