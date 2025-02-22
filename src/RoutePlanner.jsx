@@ -89,6 +89,9 @@ function RoutePlanner() {
   return (
     <div className="h-screen w-screen flex flex-col">
       <Navbar />
+      <Button onClick={openModal} variant="contained">
+        Save this Route
+      </Button>
       <div className="flex-grow">
         <MapContainer
           center={[38.25, -85.738]} 
@@ -107,9 +110,7 @@ function RoutePlanner() {
           <ClickLocater />
           <Polyline positions={polyLinePositions} color="blue" />
         </MapContainer>
-      <Button onClick={openModal} variant="contained">
-        Save this Route
-      </Button>
+      
       <Modal onClose={saveRoute} open={open}>
         <Box sx={style}>
           <Stack>
