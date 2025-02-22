@@ -12,8 +12,8 @@ export default function BikeSafetyApp() {
   const [waypoints, setWaypoints] = useState([]);
   const [stolenBikes, setStolenBikes] = useState([]);
   const map = useRef(null);
-  let lat = 0;
-  let long = 0;
+  let lat = 38.25;
+  let long = -85.738;
 
   const addWaypoint = (e) => {
     setWaypoints([...waypoints, [e.latlng.lat, e.latlng.lng]]);
