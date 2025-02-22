@@ -1,5 +1,5 @@
 # WEB URL 
-https://bikemapper-e210b.web.app
+bikemapper-e210b.firebaseapp.com
 
 # React + Vite
 
