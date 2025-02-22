@@ -9,8 +9,9 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar"; // Import Navbar
-import { Modal, Button, Box, TextField, Rating, Stack } from "@mui/material";
+import Navbar from "./Navbar";
+import { Modal, Button, Box, TextField, Rating, Stack, Fab } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
 
 const style = {
   position: "absolute",
@@ -45,29 +46,21 @@ function RoutePlanner() {
     return null;
   }
 
-  const goHome = () => {
-    navigate("/");
-  };
-
-  const openModal = () => {
-    setOpen(true);
-  };
-
   const saveRoute = () => {
     let dist = 0; // in meters
     let center = [0, 0]; // in coordinates
     for (var i = 0; i < waypoints.length - 1; i++) {
-      dist += L.latLng(waypoints[i].ltln).distanceTo(
-        L.latLng(waypoints[i + 1].ltln)
+      dist += L.latLng(waypoints[i].latlng).distanceTo(
+        L.latLng(waypoints[i + 1].latlng)
       );
     }
-    waypoints.map((location) => {
-      center[0] += location.ltln.lat;
-      center[1] += location.ltln.lng;
+    waypoints.forEach((location) => {
+      center[0] += location.latlng.lat;
+      center[1] += location.latlng.lng;
     });
     if (waypoints.length > 0) {
-      center[0] = center[0] / waypoints.length;
-      center[1] = center[1] / waypoints.length;
+      center[0] /= waypoints.length;
+      center[1] /= waypoints.length;
     }
     console.log("Route Distance:", dist);
     console.log("Route Center:", center);
@@ -89,14 +82,11 @@ function RoutePlanner() {
   return (
     <div className="h-screen w-screen flex flex-col">
       <Navbar />
-      <Button onClick={openModal} variant="contained">
-        Save this Route
-      </Button>
       <div className="flex-grow">
         <MapContainer
-          center={[38.25, -85.738]} 
+          center={[38.25, -85.738]}
           zoom={13}
-          style={{ height: "calc(100vh - 64px)", width: "100%" }} // Map fills screen under navbar
+          style={{ height: "calc(100vh - 64px)", width: "100%" }}
           ref={map}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -110,30 +100,47 @@ function RoutePlanner() {
           <ClickLocater />
           <Polyline positions={polyLinePositions} color="blue" />
         </MapContainer>
-      
-      <Modal onClose={saveRoute} open={open}>
-        <Box sx={style}>
-          <Stack>
-            <TextField
-              id="route-name"
-              label="Route Name"
-              variant="outlined"
-              value={routeName}
-              onChange={(e) => setRouteName(e.target.value)}
-            />
-            <Rating
-              name="route-rating"
-              value={routeRating}
-              onChange={(event, newRouteRating) => {
-                setRouteRating(newRouteRating);
-              }}
-            />
-            <Button varient="contained" onClick={saveRoute}>
-              Save
-            </Button>
-          </Stack>
-        </Box>
-      </Modal>
+
+        {/* Floating Action Button (FAB) */}
+        <Fab
+          variant = "extended"
+          color="primary"
+          aria-label="save"
+          onClick={() => setOpen(true)}
+          sx={{
+            position: "fixed",
+            bottom: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          <SaveIcon />
+        </Fab>
+
+        {/* Save Route Modal */}
+        <Modal onClose={() => setOpen(false)} open={open}>
+          <Box sx={style}>
+            <Stack spacing={2}>
+              <TextField
+                id="route-name"
+                label="Route Name"
+                variant="outlined"
+                value={routeName}
+                onChange={(e) => setRouteName(e.target.value)}
+              />
+              <Rating
+                name="route-rating"
+                value={routeRating}
+                onChange={(event, newRouteRating) => {
+                  setRouteRating(newRouteRating);
+                }}
+              />
+              <Button variant="contained" onClick={saveRoute}>
+                Save
+              </Button>
+            </Stack>
+          </Box>
+        </Modal>
       </div>
     </div>
   );
