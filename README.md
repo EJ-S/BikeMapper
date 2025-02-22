@@ -11,10 +11,9 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 
-# Make the base project
+# Run the project
 ```
-npm create vite@latest BikeMapper --template react
-cd BikeMapper/
-npm install leaflet react-leaflet
+git clone https://github.com/EJ-S/BikeMapper
+npm install vite leaflet react-leaflet
 npm run dev
 ```
