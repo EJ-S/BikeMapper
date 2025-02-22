@@ -1,6 +1,6 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, Firestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 
 // Firebase configuration (Not needed as RNFirebase auto-links)
 // const firebaseConfig = { apiKey, authDomain, etc. }; 
@@ -21,6 +21,5 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-export default db;
+export const db = getDatabase(app);

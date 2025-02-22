@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { FetchAllRoutes } from "./orm.js";
 import {
   MapContainer,
   TileLayer,
@@ -9,9 +10,14 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import Navbar from "./Navbar";
 import { Modal, Button, Box, TextField, Rating, Stack, Fab } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
+=======
+import { Modal, Button, Box, TextField, Rating, Stack } from "@mui/material";
+import { getDatabase } from "firebase/database";
+>>>>>>> implement-database-get-and-set
 
 const style = {
   position: "absolute",
@@ -31,17 +37,21 @@ function RoutePlanner() {
   const [routeRating, setRouteRating] = useState(1);
   const [routeName, setRouteName] = useState("");
   const map = useRef(null);
+  let lat = 38.25;
+  let long = -85.738;
+
   const navigate = useNavigate();
 
   const polyLinePositions = waypoints.map((loc) => [
-    loc.latlng.lat,
-    loc.latlng.lng,
+    loc.ltln.lat,
+    loc.ltln.lng,
   ]);
 
   function ClickLocater() {
-    useMapEvent("click", (e) => {
-      const latlng = e.latlng;
-      setWaypoints((prevWaypoints) => [...prevWaypoints, { latlng }]);
+    const map = useMapEvent("click", (e) => {
+      const ltln = e.latlng;
+      const newWaypoints = waypoints.concat({ ltln });
+      setWaypoints(newWaypoints);
     });
     return null;
   }
@@ -68,18 +78,42 @@ function RoutePlanner() {
     console.log("Route Rating:", routeRating);
     console.log("Points:", polyLinePositions);
     setOpen(false);
+
+    let userID = "asd239f293d";
+    let db = getDatabase();
+
+    set(ref(db, 'ROUTES'), {
+      center: {
+        lat: center[0],
+        lon: center[1]
+      },
+      createdBy: userID,
+      distance: dist,
+      id: "2fh34h6",
+      name: Math.random.toString(),
+      nodes: {
+        1: {
+          lat: 1.2,
+          lon: 2.6
+        },
+        rating: 4
+      }
+    })
+
   };
 
   const handleMarkerClick = (index) => {
     console.log("Clicked Waypoint", index);
     if (window.confirm("Delete this Node?")) {
-      setWaypoints((prevWaypoints) =>
-        prevWaypoints.filter((_, i) => i !== index)
-      );
+      const newWaypoints = waypoints
+        .slice(0, index)
+        .concat(waypoints.slice(index + 1));
+      setWaypoints(newWaypoints);
     }
   };
 
   return (
+<<<<<<< HEAD
     <div className="h-screen w-screen flex flex-col">
       <Navbar />
       <div className="flex-grow">
@@ -142,6 +176,54 @@ function RoutePlanner() {
           </Box>
         </Modal>
       </div>
+=======
+    <div>
+      <h1>Plan A Route</h1>
+      <button onClick={goHome}>Go Home</button>
+      <MapContainer
+        center={[lat, long]}
+        zoom={13}
+        style={{ height: "500px", width: "500px" }}
+        ref={map}
+      >
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {waypoints.map((wp, index) => (
+          <Marker
+            key={index}
+            position={[wp.ltln.lat, wp.ltln.lng]}
+            eventHandlers={{ click: () => handleMarkerClick(index) }}
+          ></Marker>
+        ))}
+        <ClickLocater />
+        <Polyline positions={polyLinePositions} color="blue" />
+      </MapContainer>
+      <Button onClick={openModal} variant="contained">
+        Save this Route
+      </Button>
+      <Modal onClose={saveRoute} open={open}>
+        <Box sx={style}>
+          <Stack>
+            <TextField
+              id="route-name"
+              label="Route Name"
+              variant="outlined"
+              value={routeName}
+              onChange={(e) => setRouteName(e.target.value)}
+            />
+            <Rating
+              name="route-rating"
+              value={routeRating}
+              onChange={(event, newRouteRating) => {
+                setRouteRating(newRouteRating);
+              }}
+            />
+            <Button varient="contained" onClick={saveRoute}>
+              Save
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
+>>>>>>> implement-database-get-and-set
     </div>
   );
 }
