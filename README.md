@@ -11,3 +11,4 @@ npm run dev
 ```
 firebase deploy --only hosting
 ```
+![image](https://github.com/user-attachments/assets/0493560b-1350-4474-ad54-fa1fa2be303c)
