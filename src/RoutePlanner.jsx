@@ -114,7 +114,7 @@ function RoutePlanner() {
             transform: "translateX(-50%)",
           }}
         >
-          <SaveIcon />
+          Save Route 
         </Fab>
 
         {/* Save Route Modal */}
