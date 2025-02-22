@@ -22,8 +22,7 @@ import {
 
 // need this for any file working with firebase db
 import { db } from "./firebase.js";
-import { ref, set } from "firebase/database";
-import { create } from "@mui/material/styles/createTransitions.js";
+import { ref, set, push } from "firebase/database";
 
 const style = {
   position: "absolute",
@@ -83,7 +82,7 @@ function RoutePlanner() {
     console.log("Points:", polyLinePositions);
     setOpen(false);
 
-    saveToDb();
+    saveToDb(dist, center);
 
     // set(ref(db, "ROUTES"), {
     //   center: {
@@ -98,14 +97,14 @@ function RoutePlanner() {
     // });
   };
 
-  const saveToDb = (routeName, waypoints) => {
+  const saveToDb = (dist, center) => {
     let userID = "asd239f293d";
 
-    const routesRef = ref(database, "ROUTES");
+    const routesRef = ref(db, "ROUTES");
     const newRouteRef = push(routesRef); // Generate a unique route ID
 
     const waypointsObject = {};
-    waypoints.forEach((point, index) => {
+    polyLinePositions.forEach((point, index) => {
       waypointsObject[`point${index + 1}`] = point;
     });
 
