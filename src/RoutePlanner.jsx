@@ -10,6 +10,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar"; // Import Navbar
 import { Modal, Button, Box, TextField, Rating, Stack } from "@mui/material";
 
 const style = {
@@ -30,21 +31,17 @@ function RoutePlanner() {
   const [routeRating, setRouteRating] = useState(1);
   const [routeName, setRouteName] = useState("");
   const map = useRef(null);
-  let lat = 38.25;
-  let long = -85.738;
-
   const navigate = useNavigate();
 
   const polyLinePositions = waypoints.map((loc) => [
-    loc.ltln.lat,
-    loc.ltln.lng,
+    loc.latlng.lat,
+    loc.latlng.lng,
   ]);
 
   function ClickLocater() {
-    const map = useMapEvent("click", (e) => {
-      const ltln = e.latlng;
-      const newWaypoints = waypoints.concat({ ltln });
-      setWaypoints(newWaypoints);
+    useMapEvent("click", (e) => {
+      const latlng = e.latlng;
+      setWaypoints((prevWaypoints) => [...prevWaypoints, { latlng }]);
     });
     return null;
   }
@@ -85,37 +82,37 @@ function RoutePlanner() {
   const handleMarkerClick = (index) => {
     console.log("Clicked Waypoint", index);
     if (window.confirm("Delete this Node?")) {
-      const newWaypoints = waypoints
-        .slice(0, index)
-        .concat(waypoints.slice(index + 1));
-      setWaypoints(newWaypoints);
+      setWaypoints((prevWaypoints) =>
+        prevWaypoints.filter((_, i) => i !== index)
+      );
     }
   };
 
   return (
-    <div>
-      <h1>Plan A Route</h1>
-      <button onClick={goHome}>Go Home</button>
-      <MapContainer
-        center={[lat, long]}
-        zoom={13}
-        style={{ height: "500px", width: "500px" }}
-        ref={map}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {waypoints.map((wp, index) => (
-          <Marker
-            key={index}
-            position={[wp.ltln.lat, wp.ltln.lng]}
-            eventHandlers={{ click: () => handleMarkerClick(index) }}
-          ></Marker>
-        ))}
-        <ClickLocater />
-        <Polyline positions={polyLinePositions} color="blue" />
-      </MapContainer>
+    <div className="h-screen w-screen flex flex-col">
+      <Navbar />
       <Button onClick={openModal} variant="contained">
         Save this Route
       </Button>
+      <div className="flex-grow">
+        <MapContainer
+          center={[38.25, -85.738]} 
+          zoom={13}
+          style={{ height: "calc(100vh - 64px)", width: "100%" }} // Map fills screen under navbar
+          ref={map}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          {waypoints.map((wp, index) => (
+            <Marker
+              key={index}
+              position={[wp.latlng.lat, wp.latlng.lng]}
+              eventHandlers={{ click: () => handleMarkerClick(index) }}
+            />
+          ))}
+          <ClickLocater />
+          <Polyline positions={polyLinePositions} color="blue" />
+        </MapContainer>
+      
       <Modal onClose={saveRoute} open={open}>
         <Box sx={style}>
           <Stack>
@@ -139,6 +136,7 @@ function RoutePlanner() {
           </Stack>
         </Box>
       </Modal>
+      </div>
     </div>
   );
 }
