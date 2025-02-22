@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function BikeSafetyApp() {
+  const [waypoints, setWaypoints] = useState([]);
+  const [stolenBikes, setStolenBikes] = useState([]);
+
+  const addWaypoint = (e) => {
+    setWaypoints([...waypoints, [e.latlng.lat, e.latlng.lng]]);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="p-4">
+      <h1 className="text-xl font-bold mb-4">Bike Safety Tracker</h1>
+      <MapContainer
+        center={[51.505, -0.09]}
+        zoom={13}
+        style={{ height: "500px", width: "100%" }}
+        onClick={addWaypoint}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {waypoints.map((pos, index) => (
+          <Marker key={index} position={pos}>
+            <Popup>Waypoint {index + 1}</Popup>
+          </Marker>
+        ))}
+        <Polyline positions={waypoints} color="blue" />
+      </MapContainer>
+    </div>
+  );
 }
 
-export default App
