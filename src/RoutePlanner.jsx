@@ -10,14 +10,10 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
+import { getDatabase } from "firebase/database";
 import Navbar from "./Navbar";
 import { Modal, Button, Box, TextField, Rating, Stack, Fab } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-=======
-import { Modal, Button, Box, TextField, Rating, Stack } from "@mui/material";
-import { getDatabase } from "firebase/database";
->>>>>>> implement-database-get-and-set
 
 const style = {
   position: "absolute",
@@ -79,6 +75,7 @@ function RoutePlanner() {
     console.log("Points:", polyLinePositions);
     setOpen(false);
 
+    
     let userID = "asd239f293d";
     let db = getDatabase();
 
@@ -90,16 +87,15 @@ function RoutePlanner() {
       createdBy: userID,
       distance: dist,
       id: "2fh34h6",
-      name: Math.random.toString(),
+      name: routeName,
       nodes: {
         1: {
           lat: 1.2,
           lon: 2.6
         },
-        rating: 4
+        rating: routeRating
       }
     })
-
   };
 
   const handleMarkerClick = (index) => {
@@ -113,7 +109,6 @@ function RoutePlanner() {
   };
 
   return (
-<<<<<<< HEAD
     <div className="h-screen w-screen flex flex-col">
       <Navbar />
       <div className="flex-grow">
@@ -176,54 +171,6 @@ function RoutePlanner() {
           </Box>
         </Modal>
       </div>
-=======
-    <div>
-      <h1>Plan A Route</h1>
-      <button onClick={goHome}>Go Home</button>
-      <MapContainer
-        center={[lat, long]}
-        zoom={13}
-        style={{ height: "500px", width: "500px" }}
-        ref={map}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {waypoints.map((wp, index) => (
-          <Marker
-            key={index}
-            position={[wp.ltln.lat, wp.ltln.lng]}
-            eventHandlers={{ click: () => handleMarkerClick(index) }}
-          ></Marker>
-        ))}
-        <ClickLocater />
-        <Polyline positions={polyLinePositions} color="blue" />
-      </MapContainer>
-      <Button onClick={openModal} variant="contained">
-        Save this Route
-      </Button>
-      <Modal onClose={saveRoute} open={open}>
-        <Box sx={style}>
-          <Stack>
-            <TextField
-              id="route-name"
-              label="Route Name"
-              variant="outlined"
-              value={routeName}
-              onChange={(e) => setRouteName(e.target.value)}
-            />
-            <Rating
-              name="route-rating"
-              value={routeRating}
-              onChange={(event, newRouteRating) => {
-                setRouteRating(newRouteRating);
-              }}
-            />
-            <Button varient="contained" onClick={saveRoute}>
-              Save
-            </Button>
-          </Stack>
-        </Box>
-      </Modal>
->>>>>>> implement-database-get-and-set
     </div>
   );
 }
