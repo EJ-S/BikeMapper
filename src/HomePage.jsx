@@ -8,17 +8,15 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar"; // Import Navbar
 
 function HomePage() {
   const [waypoints, setWaypoints] = useState([]);
-  const [stolenBikes, setStolenBikes] = useState([]);
+  const [userLocation, setUserLocation] = useState([38.25, -85.738]); // Default location
   const map = useRef(null);
-  let lat = 38.25;
-  let long = -85.738;
-
   const navigate = useNavigate();
 
-  const handbleButtonClick = () => {
+  const handleButtonClick = () => {
     navigate("/route-planner");
   };
 
@@ -27,42 +25,46 @@ function HomePage() {
   };
 
   useEffect(() => {
-    console.log("running");
     if (map.current) {
       map.current.locate({ setView: true, maxZoom: 16 });
 
       map.current.on("locationfound", (e) => {
-        alert(e.latlng);
-        const { lt, lng } = e.latlng;
-        lat = lt;
-        long = lng;
+        const { lat, lng } = e.latlng;
+        setUserLocation([lat, lng]); // ✅ Update state correctly
       });
 
       map.current.on("locationerror", (e) => {
         console.error("Location Error:", e.message);
       });
     }
-  });
+  }, []);
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Bike Safety Tracker</h1>
-      <button onClick={handbleButtonClick}>Go to Route Planner</button>
-      <MapContainer
-        center={[lat, long]}
-        zoom={13}
-        style={{ height: "500px", width: "100%" }}
-        ref={map}
-        onClick={addWaypoint}
+    <div className="h-screen w-screen flex flex-col">
+      <Navbar />
+      <div className="flex-grow">
+        <MapContainer
+          center={userLocation}
+          zoom={13}
+          style={{ height: "calc(100vh - 64px)", width: "100%" }} // Adjust height to fit below navbar
+          ref={map}
+          onClick={addWaypoint}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          {waypoints.map((pos, index) => (
+            <Marker key={index} position={pos}>
+              <Popup>Waypoint {index + 1}</Popup>
+            </Marker>
+          ))}
+          <Polyline positions={waypoints} color="blue" />
+        </MapContainer>
+      </div>
+      <button
+        onClick={handleButtonClick}
+        className="absolute top-[80px] right-4 p-2 bg-blue-500 text-white rounded shadow-lg"
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {waypoints.map((pos, index) => (
-          <Marker key={index} position={pos}>
-            <Popup>Waypoint {index + 1}</Popup>
-          </Marker>
-        ))}
-        <Polyline positions={waypoints} color="blue" />
-      </MapContainer>
+        Go to Route Planner
+      </button>
     </div>
   );
 }
