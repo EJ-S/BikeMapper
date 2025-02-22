@@ -1,6 +1,7 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
+import { getApps } from "firebase/app";
 
 // Firebase configuration (Not needed as RNFirebase auto-links)
 // const firebaseConfig = { apiKey, authDomain, etc. }; 
@@ -16,10 +17,15 @@ const firebaseConfig = {
   storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_APP_ID,
-  measurementId: process.env.REACT_APP_MEASUREMENT_ID
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
+  databaseURL: "https://bikemapper-e210b-default-rtdb.firebaseio.com/"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+console.log("Database URL:", firebaseConfig.databaseURL);
+
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
 export const db = getDatabase(app);
+export default app;
+

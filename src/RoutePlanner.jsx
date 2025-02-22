@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { FetchAllRoutes } from "./orm.js";
 import {
   MapContainer,
   TileLayer,
@@ -10,10 +9,12 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useNavigate } from "react-router-dom";
-import { getDatabase } from "firebase/database";
 import Navbar from "./Navbar";
 import { Modal, Button, Box, TextField, Rating, Stack, Fab } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
+
+// need this for any file working with firebase db
+import { db } from "./firebase.js";
+import { ref, set } from "firebase/database";
 
 const style = {
   position: "absolute",
@@ -33,23 +34,33 @@ function RoutePlanner() {
   const [routeRating, setRouteRating] = useState(1);
   const [routeName, setRouteName] = useState("");
   const map = useRef(null);
-  let lat = 38.25;
-  let long = -85.738;
 
   const navigate = useNavigate();
 
   const polyLinePositions = waypoints.map((loc) => [
-    loc.ltln.lat,
-    loc.ltln.lng,
+    loc.latlng.lat,
+    loc.latlng.lng,
   ]);
+
+  
 
   function ClickLocater() {
     const map = useMapEvent("click", (e) => {
-      const ltln = e.latlng;
-      const newWaypoints = waypoints.concat({ ltln });
+      const latlng = e.latlng;
+      const newWaypoints = waypoints.concat({ latlng });
       setWaypoints(newWaypoints);
     });
     return null;
+  }
+
+  function createSaveJson() {
+    let js = "{"
+    for (var i = 0; i < polyLinePositions.length; i++) {
+      js += `${i}: {lat:${polyLinePositions[i][0]}, lon:${polyLinePositions[i][1]}},`
+    }
+    js += "}";
+    console.log(js);
+    return js;
   }
 
   const saveRoute = () => {
@@ -73,11 +84,11 @@ function RoutePlanner() {
     console.log("Route Name:", routeName);
     console.log("Route Rating:", routeRating);
     console.log("Points:", polyLinePositions);
+    createSaveJson();
     setOpen(false);
 
     
     let userID = "asd239f293d";
-    let db = getDatabase();
 
     set(ref(db, 'ROUTES'), {
       center: {
@@ -88,14 +99,9 @@ function RoutePlanner() {
       distance: dist,
       id: "2fh34h6",
       name: routeName,
-      nodes: {
-        1: {
-          lat: 1.2,
-          lon: 2.6
-        },
-        rating: routeRating
-      }
+      rating: routeRating,
     })
+
   };
 
   const handleMarkerClick = (index) => {
