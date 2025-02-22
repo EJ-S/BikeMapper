@@ -7,12 +7,28 @@ import {
   useMapEvent,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar"; // Import Navbar
+import { Modal, Button, Box, TextField, Rating, Stack } from "@mui/material";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 function RoutePlanner() {
   const [waypoints, setWaypoints] = useState([]);
-  const [userLocation, setUserLocation] = useState([38.25, -85.738]); // Default location
+  const [open, setOpen] = useState(false);
+  const [routeRating, setRouteRating] = useState(1);
+  const [routeName, setRouteName] = useState("");
   const map = useRef(null);
   const navigate = useNavigate();
 
@@ -31,6 +47,34 @@ function RoutePlanner() {
 
   const goHome = () => {
     navigate("/");
+  };
+
+  const openModal = () => {
+    setOpen(true);
+  };
+
+  const saveRoute = () => {
+    let dist = 0; // in meters
+    let center = [0, 0]; // in coordinates
+    for (var i = 0; i < waypoints.length - 1; i++) {
+      dist += L.latLng(waypoints[i].ltln).distanceTo(
+        L.latLng(waypoints[i + 1].ltln)
+      );
+    }
+    waypoints.map((location) => {
+      center[0] += location.ltln.lat;
+      center[1] += location.ltln.lng;
+    });
+    if (waypoints.length > 0) {
+      center[0] = center[0] / waypoints.length;
+      center[1] = center[1] / waypoints.length;
+    }
+    console.log("Route Distance:", dist);
+    console.log("Route Center:", center);
+    console.log("Route Name:", routeName);
+    console.log("Route Rating:", routeRating);
+    console.log("Points:", polyLinePositions);
+    setOpen(false);
   };
 
   const handleMarkerClick = (index) => {
@@ -63,13 +107,32 @@ function RoutePlanner() {
           <ClickLocater />
           <Polyline positions={polyLinePositions} color="blue" />
         </MapContainer>
-      </div>
-      <button
-        onClick={goHome}
-        className="absolute top-[80px] right-4 p-2 bg-red-500 text-white rounded shadow-lg"
-      >
-        Go Home
-      </button>
+      <Button onClick={openModal} variant="contained">
+        Save this Route
+      </Button>
+      <Modal onClose={saveRoute} open={open}>
+        <Box sx={style}>
+          <Stack>
+            <TextField
+              id="route-name"
+              label="Route Name"
+              variant="outlined"
+              value={routeName}
+              onChange={(e) => setRouteName(e.target.value)}
+            />
+            <Rating
+              name="route-rating"
+              value={routeRating}
+              onChange={(event, newRouteRating) => {
+                setRouteRating(newRouteRating);
+              }}
+            />
+            <Button varient="contained" onClick={saveRoute}>
+              Save
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
     </div>
   );
 }
