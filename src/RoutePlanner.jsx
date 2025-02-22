@@ -22,7 +22,7 @@ import {
 
 // need this for any file working with firebase db
 import { db } from "./firebase.js";
-import { ref, set, push } from "firebase/database";
+import { ref, get, set, push } from "firebase/database";
 
 const style = {
   position: "absolute",
@@ -83,18 +83,6 @@ function RoutePlanner() {
     setOpen(false);
 
     saveToDb(dist, center);
-
-    // set(ref(db, "ROUTES"), {
-    //   center: {
-    //     lat: center[0],
-    //     lon: center[1],
-    //   },
-    //   createdBy: userID,
-    //   distance: dist,
-    //   id: "2fh34h6",
-    //   name: routeName,
-    //   rating: routeRating,
-    // });
   };
 
   const saveToDb = (dist, center) => {
@@ -132,6 +120,19 @@ function RoutePlanner() {
       setWaypoints(newWaypoints);
     }
   };
+
+  const fetchAllRoutes = () => {
+    let routes = ref(db, 'ROUTES');
+
+    get(routes).then(
+      (instance) => {
+        if (instance.exists()) {
+          // implementation on observables
+        }
+      }
+    );
+  }
+
 
   return (
     <div className="h-screen w-screen flex flex-col">

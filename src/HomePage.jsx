@@ -9,6 +9,10 @@ import {
 import "leaflet/dist/leaflet.css";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar"; // Import Navbar
+import {Fab} from "@mui/material";
+
+import { db } from "./firebase.js";
+import { ref, get, set, push } from "firebase/database";
 
 function HomePage() {
   const [waypoints, setWaypoints] = useState([]);
@@ -39,6 +43,27 @@ function HomePage() {
     }
   }, []);
 
+  const fetchAllRoutes = () => {
+    let routes = ref(db, 'ROUTES');
+    console.log("RUNNING");
+    get(routes).then(
+      (instance) => {
+        if (instance.exists()) {
+          const v = instance.val();
+          console.log(v);
+          console.log(typeof(v));
+          let routeList = Object.entries(v);
+          routeList.forEach(o => {
+            console.log(o[1].nodes);
+          })
+          // v.forEach(o => {
+          //   console.log(o);
+          // });
+        }
+      }
+    );
+  }
+
   return (
     <div className="h-screen w-screen flex flex-col">
       <Navbar />
@@ -59,14 +84,31 @@ function HomePage() {
           <Polyline positions={waypoints} color="blue" />
         </MapContainer>
       </div>
+      <Fab
+          variant="extended"
+          color="primary"
+          aria-label="save"
+          onClick={() => fetchAllRoutes()}
+          sx={{
+            position: "fixed",
+            bottom: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          Show Routes
+        </Fab>
       <button
         onClick={handleButtonClick}
         className="absolute top-[80px] right-4 p-2 bg-blue-500 text-white rounded shadow-lg"
       >
         Go to Route Planner
       </button>
+      
     </div>
   );
 }
+
+
 
 export default HomePage;
