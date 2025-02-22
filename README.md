@@ -7,7 +7,7 @@ git clone https://github.com/EJ-S/BikeMapper
 npm install vite leaflet react-leaflet
 npm run dev
 ```
-# RUN THIS WHEN DEPLOYING NEW VERSION TO FIREBASE
+# Run This When Deploying New Version To Firebase Hosting
 ```
 firebase deploy --only hosting
 ```
