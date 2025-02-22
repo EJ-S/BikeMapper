@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { FetchAllRoutes } from "./orm.js";
 import {
   MapContainer,
   TileLayer,
@@ -78,6 +79,7 @@ function RoutePlanner() {
     console.log("Route Rating:", routeRating);
     console.log("Points:", polyLinePositions);
     setOpen(false);
+
   };
 
   const handleMarkerClick = (index) => {
