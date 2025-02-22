@@ -19,7 +19,7 @@ function HomePage() {
   const navigate = useNavigate();
 
   const handbleButtonClick = () => {
-    navigate("/test-page");
+    navigate("/route-planner");
   };
 
   const addWaypoint = (e) => {
@@ -47,7 +47,7 @@ function HomePage() {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Bike Safety Tracker</h1>
-      <button onClick={handbleButtonClick}>Go to Test Page</button>
+      <button onClick={handbleButtonClick}>Go to Route Planner</button>
       <MapContainer
         center={[lat, long]}
         zoom={13}
