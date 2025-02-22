@@ -91,7 +91,7 @@ function RoutePlanner() {
       <Navbar />
       <div className="flex-grow">
         <MapContainer
-          center={userLocation}
+          center={[38.25, -85.738]} 
           zoom={13}
           style={{ height: "calc(100vh - 64px)", width: "100%" }} // Map fills screen under navbar
           ref={map}
@@ -133,6 +133,7 @@ function RoutePlanner() {
           </Stack>
         </Box>
       </Modal>
+      </div>
     </div>
   );
 }
