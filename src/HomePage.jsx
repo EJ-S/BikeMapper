@@ -120,16 +120,19 @@ function HomePage() {
         let newWaypoints = [];
 
         waypoints.forEach((o) => {
-          console.log(o);
-          if (o.lat && o.long && o.type) {
+          console.log(o[1]);
+          if (o[1].lat && o[1].lon && o[1].type) {
+            console.log("pushing");
             newWaypoints.push({
-              position: [o.lat, o.lon],
-              type: o.type,
+              position: [o[1].lat, o[1].lon],
+              type: o[1].type,
             });
           }
         });
 
         console.log(newWaypoints);
+
+        setWaypoints(newWaypoints);
       }
     });
   };
