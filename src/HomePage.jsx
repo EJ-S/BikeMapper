@@ -45,7 +45,7 @@ const iconMappings = {
 };
 
 function saveWaypoint(index, lat, lon, type) {
-  d = {
+  let d = {
     createdBy: "test",
     creaationDate: 0,
     lat: lat,
