@@ -44,6 +44,20 @@ const iconMappings = {
   "Bike Rack": L.icon({ iconUrl: customIcon6, iconSize: [30, 30] }),
 };
 
+function saveWaypoint(index, lat, lon, type) {
+  d = {
+    createdBy: "test",
+    creaationDate: 0,
+    lat: lat,
+    lon: lon,
+    type: type,
+  };
+
+  set(ref(db, `WAYPOINTS/${index}`), d)
+    .then(() => console.log("Data added successfully"))
+    .catch((error) => console.error("Error adding data: ", error));
+}
+
 function ClickLocater({ setWaypoints, waypoints, selectedWaypointType }) {
   useMapEvent("click", (e) => {
     if (selectedWaypointType) {
@@ -52,6 +66,12 @@ function ClickLocater({ setWaypoints, waypoints, selectedWaypointType }) {
         { position: [e.latlng.lat, e.latlng.lng], type: selectedWaypointType },
       ];
       setWaypoints(newWaypoints);
+      saveWaypoint(
+        newWaypoints.length - 1,
+        e.latlng.lat,
+        e.latlng.lng,
+        selectedWaypointType
+      );
     }
   });
   return null;
@@ -82,7 +102,37 @@ function HomePage() {
         console.error("Location Error:", e.message);
       });
     }
+
+    fetchAllWaypoints();
   }, []);
+
+  const fetchAllWaypoints = () => {
+    let wps = ref(db, "WAYPOINTS");
+    console.log("RUNNING");
+    get(wps).then((instance) => {
+      if (instance.exists()) {
+        const v = instance.val();
+        console.log(v);
+        console.log(typeof v);
+
+        let waypoints = Object.entries(v);
+
+        let newWaypoints = [];
+
+        waypoints.forEach((o) => {
+          console.log(o);
+          if (o.lat && o.long && o.type) {
+            newWaypoints.push({
+              position: [o.lat, o.lon],
+              type: o.type,
+            });
+          }
+        });
+
+        console.log(newWaypoints);
+      }
+    });
+  };
 
   const fetchAllRoutes = () => {
     let routes = ref(db, "ROUTES");
