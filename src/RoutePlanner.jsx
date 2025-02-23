@@ -108,7 +108,10 @@ function RoutePlanner() {
 
     const waypointsObject = {};
     polyLinePositions.forEach((point, index) => {
-      waypointsObject[`point${index + 1}`] = point;
+      if (index < 10) {
+        waypointsObject[`point0${index}`];
+      }
+      waypointsObject[`point${index}`] = point;
     });
 
     set(newRouteRef, {
