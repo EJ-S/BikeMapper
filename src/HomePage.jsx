@@ -36,9 +36,9 @@ const ButtonContainer = styled(Box)({
 });
 
 const iconMappings = {
-  "Bike Stolen Here": L.icon({ iconUrl: customIcon4, iconSize: [30, 30] }),
-  "Bike Friendly Business": L.icon({ iconUrl: customIcon5, iconSize: [30, 30] }),
-  "Bike Rack": L.icon({ iconUrl: customIcon6, iconSize: [30, 30] }),
+  "Stolen Bike": L.icon({ iconUrl: customIcon1, iconSize: [30, 30] }),
+  "Bike Friendly Business": L.icon({ iconUrl: customIcon2, iconSize: [30, 30] }),
+  "Bike Rack": L.icon({ iconUrl: customIcon3, iconSize: [30, 30] }),
 };
 
 function ClickLocater({ setWaypoints, waypoints, selectedWaypointType }) {
@@ -149,14 +149,14 @@ function HomePage() {
 
       {/* Floating Action Buttons (FABs) */}
       <ButtonContainer>
-        <Fab variant="extended" onClick={() => setSelectedWaypointType("Thief Icon")}>
-          <img src={customIcon1} alt="Thief Icon" width={30} height={30} />
+        <Fab variant="extended" onClick={() => setSelectedWaypointType("Stolen Bike")}>
+          <img src={customIcon1} alt="Stolen Bike" width={30} height={30} />
         </Fab>
-        <Fab variant="extended" onClick={() => setSelectedWaypointType("Store Icon")}>
-          <img src={customIcon2} alt="Store Icon" width={30} height={30} />
+        <Fab variant="extended" onClick={() => setSelectedWaypointType("Bike Friendly Business")}>
+          <img src={customIcon2} alt="Bike Friendly Business" width={30} height={30} />
         </Fab>
-        <Fab variant="extended" onClick={() => setSelectedWaypointType("Lock Icon")}>
-          <img src={customIcon3} alt="Lock Icon" width={30} height={30} />
+        <Fab variant="extended" onClick={() => setSelectedWaypointType("Bike Rack")}>
+          <img src={customIcon3} alt="Bike Rack" width={30} height={30} />
         </Fab>
       </ButtonContainer>
 
