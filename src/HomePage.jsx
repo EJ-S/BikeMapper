@@ -36,9 +36,9 @@ const ButtonContainer = styled(Box)({
 });
 
 const iconMappings = {
-  "Thief Icon": L.icon({ iconUrl: customIcon4, iconSize: [30, 30] }),
-  "Store Icon": L.icon({ iconUrl: customIcon5, iconSize: [30, 30] }),
-  "Lock Icon": L.icon({ iconUrl: customIcon6, iconSize: [30, 30] }),
+  "Bike Stolen Here": L.icon({ iconUrl: customIcon4, iconSize: [30, 30] }),
+  "Bike Friendly Business": L.icon({ iconUrl: customIcon5, iconSize: [30, 30] }),
+  "Bike Rack": L.icon({ iconUrl: customIcon6, iconSize: [30, 30] }),
 };
 
 function ClickLocater({ setWaypoints, waypoints, selectedWaypointType }) {
