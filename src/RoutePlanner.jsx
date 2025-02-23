@@ -16,6 +16,12 @@ import { Modal, Button, Box, TextField, Rating, Stack, Fab } from "@mui/material
 import { db } from "./firebase.js";
 import { ref, set } from "firebase/database";
 
+
+import mapIcon from "./assets/marker_icon.png";
+
+const pinIcon = L.icon({ iconUrl: mapIcon, iconSize: [30, 30] })
+
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -41,8 +47,6 @@ function RoutePlanner() {
     loc.latlng.lat,
     loc.latlng.lng,
   ]);
-
-  
 
   function ClickLocater() {
     const map = useMapEvent("click", (e) => {
@@ -129,6 +133,7 @@ function RoutePlanner() {
             <Marker
               key={index}
               position={[wp.latlng.lat, wp.latlng.lng]}
+              icon={pinIcon}
               eventHandlers={{ click: () => handleMarkerClick(index) }}
             />
           ))}
