@@ -10,19 +10,11 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-import {
-  Modal,
-  Button,
-  Box,
-  TextField,
-  Rating,
-  Stack,
-  Fab,
-} from "@mui/material";
+import { Modal, Button, Box, TextField, Rating, Stack, Fab } from "@mui/material";
 
 // need this for any file working with firebase db
 import { db } from "./firebase.js";
-import { ref, get, set, push } from "firebase/database";
+import { ref, set } from "firebase/database";
 
 const style = {
   position: "absolute",
@@ -50,6 +42,8 @@ function RoutePlanner() {
     loc.latlng.lng,
   ]);
 
+  
+
   function ClickLocater() {
     const map = useMapEvent("click", (e) => {
       const latlng = e.latlng;
@@ -57,6 +51,16 @@ function RoutePlanner() {
       setWaypoints(newWaypoints);
     });
     return null;
+  }
+
+  function createSaveJson() {
+    let js = "{"
+    for (var i = 0; i < polyLinePositions.length; i++) {
+      js += `${i}: {lat:${polyLinePositions[i][0]}, lon:${polyLinePositions[i][1]}},`
+    }
+    js += "}";
+    console.log(js);
+    return js;
   }
 
   const saveRoute = () => {
@@ -80,35 +84,24 @@ function RoutePlanner() {
     console.log("Route Name:", routeName);
     console.log("Route Rating:", routeRating);
     console.log("Points:", polyLinePositions);
+    createSaveJson();
     setOpen(false);
 
-    saveToDb(dist, center);
-  };
-
-  const saveToDb = (dist, center) => {
+    
     let userID = "asd239f293d";
 
-    const routesRef = ref(db, "ROUTES");
-    const newRouteRef = push(routesRef); // Generate a unique route ID
-
-    const waypointsObject = {};
-    polyLinePositions.forEach((point, index) => {
-      waypointsObject[`point${index + 1}`] = point;
-    });
-
-    set(newRouteRef, {
+    set(ref(db, 'ROUTES'), {
       center: {
         lat: center[0],
-        lon: center[1],
+        lon: center[1]
       },
       createdBy: userID,
       distance: dist,
+      id: "2fh34h6",
       name: routeName,
-      nodes: waypointsObject,
       rating: routeRating,
-    });
+    })
 
-    console.log(`Route "${routeName}" saved successfully!`);
   };
 
   const handleMarkerClick = (index) => {
@@ -120,19 +113,6 @@ function RoutePlanner() {
       setWaypoints(newWaypoints);
     }
   };
-
-  const fetchAllRoutes = () => {
-    let routes = ref(db, 'ROUTES');
-
-    get(routes).then(
-      (instance) => {
-        if (instance.exists()) {
-          // implementation on observables
-        }
-      }
-    );
-  }
-
 
   return (
     <div className="h-screen w-screen flex flex-col">
@@ -158,7 +138,7 @@ function RoutePlanner() {
 
         {/* Floating Action Button (FAB) */}
         <Fab
-          variant="extended"
+          variant = "extended"
           color="primary"
           aria-label="save"
           onClick={() => setOpen(true)}
@@ -169,7 +149,7 @@ function RoutePlanner() {
             transform: "translateX(-50%)",
           }}
         >
-          Save Route
+          Save Route 
         </Fab>
 
         {/* Save Route Modal */}
