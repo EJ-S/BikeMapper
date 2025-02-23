@@ -12,7 +12,7 @@ import Navbar from "./Navbar"; // Import Navbar
 import {Fab} from "@mui/material";
 
 import { db } from "./firebase.js";
-import { ref, get, set, push } from "firebase/database";
+import { ref, get, set, push, orderByChild, equalTo } from "firebase/database";
 
 function HomePage() {
   const [waypoints, setWaypoints] = useState([]);
@@ -44,10 +44,12 @@ function HomePage() {
     }
   }, []);
 
-  const fetchAllRoutes = () => {
+
+  async function fetchAllRoutes() 
+  {
     let routes = ref(db, 'ROUTES');
     console.log("RUNNING");
-    get(routes).then(
+    await get(routes).then(
       (instance) => {
         if (instance.exists()) {
           const v = instance.val();
@@ -99,9 +101,11 @@ function HomePage() {
               <Popup>Waypoint {index + 1}</Popup>
             </Marker>
           ))}
+
           {displayRoutes.map((r, index) => (
             <Polyline positions={r} color="blue" />
           ))}
+          
         </MapContainer>
       </div>
       <Fab
