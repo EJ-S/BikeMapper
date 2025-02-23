@@ -14,7 +14,7 @@ import Navbar from "./Navbar";
 import { Fab, Box } from "@mui/material";
 import { styled } from "@mui/system";
 import { db } from "./firebase.js";
-import { ref, get } from "firebase/database";
+import { ref, get, set } from "firebase/database";
 
 // Import icons
 import customIcon1 from "./assets/theif_icon2.png";
