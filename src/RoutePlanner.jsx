@@ -98,6 +98,8 @@ function RoutePlanner() {
     setOpen(false);
 
     saveToDb(dist, center);
+    setWaypoints([]);
+    setSaveable(false);
   };
 
   const saveToDb = (dist, center) => {
