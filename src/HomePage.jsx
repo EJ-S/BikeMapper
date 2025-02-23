@@ -17,6 +17,7 @@ import { ref, get, set, push } from "firebase/database";
 function HomePage() {
   const [waypoints, setWaypoints] = useState([]);
   const [userLocation, setUserLocation] = useState([38.25, -85.738]); // Default location
+  const [displayRoutes, setDisplayRoutes] = useState([]);
   const map = useRef(null);
   const navigate = useNavigate();
 
@@ -34,7 +35,7 @@ function HomePage() {
 
       map.current.on("locationfound", (e) => {
         const { lat, lng } = e.latlng;
-        setUserLocation([lat, lng]); // ✅ Update state correctly
+        setUserLocation([lat, lng]); // Update state correctly
       });
 
       map.current.on("locationerror", (e) => {
@@ -53,12 +54,29 @@ function HomePage() {
           console.log(v);
           console.log(typeof(v));
           let routeList = Object.entries(v);
+
+          let newDisplayRoutes = [];
+
           routeList.forEach(o => {
-            console.log(o[1].nodes);
+            if(o[1].nodes) {
+
+              let curRoute = [];
+
+              let route = Object.entries(o[1].nodes);
+              route.forEach((el) => {
+                if (el) {
+                  curRoute.push(el[1]);
+                }
+              })
+
+              console.log(curRoute);
+              if (curRoute.length > 0) {
+                newDisplayRoutes.push(curRoute);
+              }
+            }
           })
-          // v.forEach(o => {
-          //   console.log(o);
-          // });
+
+          setDisplayRoutes(newDisplayRoutes);
         }
       }
     );
@@ -81,7 +99,9 @@ function HomePage() {
               <Popup>Waypoint {index + 1}</Popup>
             </Marker>
           ))}
-          <Polyline positions={waypoints} color="blue" />
+          {displayRoutes.map((r, index) => (
+            <Polyline positions={r} color="blue" />
+          ))}
         </MapContainer>
       </div>
       <Fab
