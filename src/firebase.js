@@ -18,7 +18,7 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.REACT_APP_MESSAGING_SENDER_ID,
   appId: import.meta.env.REACT_APP_APP_ID,
   measurementId: import.meta.env.REACT_APP_MEASUREMENT_ID,
-  databaseURL: "https://bikemapper-e210b-default-rtdb.firebaseio.com/"
+  databaseURL: import.meta.env.VITE_APP_DB_URL
 };
 
 console.log("Database URL:", firebaseConfig.databaseURL);
