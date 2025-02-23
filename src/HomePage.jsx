@@ -9,7 +9,7 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import { Fab, Box } from "@mui/material";
 import { styled } from "@mui/system";
@@ -45,7 +45,7 @@ const iconMappings = {
 };
 
 function saveWaypoint(index, lat, lon, type) {
-  data = {
+  d = {
     createdBy: "test",
     creaationDate: 0,
     lat: lat,
@@ -53,7 +53,7 @@ function saveWaypoint(index, lat, lon, type) {
     type: type,
   };
 
-  set(ref(db, `WAYPOINTS/${index}`), data)
+  set(ref(db, `WAYPOINTS/${index}`), d)
     .then(() => console.log("Data added successfully"))
     .catch((error) => console.error("Error adding data: ", error));
 }
