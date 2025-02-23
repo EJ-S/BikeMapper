@@ -24,7 +24,7 @@ import {
 const style = {
   position: "absolute",
   top: "50%",
-  left: "50%",
+  right: "70%",
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
@@ -125,6 +125,7 @@ export default function SavedRoutes() {
         <Modal isOpen={modalOpen} onClose={handleModalClose}>
           <Box sx={style}>
               <Stack spacing={2}>
+                {/* add current polyline property information here */}
                 <Text>Hello World</Text>
               </Stack>
             </Box>

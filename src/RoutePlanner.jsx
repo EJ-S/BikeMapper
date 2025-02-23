@@ -45,6 +45,7 @@ function RoutePlanner() {
   const [open, setOpen] = useState(false);
   const [routeRating, setRouteRating] = useState(1);
   const [routeName, setRouteName] = useState("");
+  const [isSavable, setSaveable] = useState(false);
   const map = useRef(null);
 
   const navigate = useNavigate();
@@ -54,11 +55,21 @@ function RoutePlanner() {
     loc.latlng.lng,
   ]);
 
+  
+
   function ClickLocater() {
     const map = useMapEvent("click", (e) => {
       const latlng = e.latlng;
       const newWaypoints = waypoints.concat({ latlng });
       setWaypoints(newWaypoints);
+      if (waypoints.length >= 1)
+      {
+        setSaveable(true);
+      }
+      else
+      {
+        setSaveable(false);
+      }
     });
     return null;
   }
@@ -153,6 +164,7 @@ function RoutePlanner() {
           variant="extended"
           color="primary"
           aria-label="save"
+          disabled={!isSavable}
           onClick={() => setOpen(true)}
           sx={{
             position: "fixed",
@@ -182,7 +194,8 @@ function RoutePlanner() {
                   setRouteRating(newRouteRating);
                 }}
               />
-              <Button variant="contained" onClick={saveRoute}>
+              <Button variant="contained" 
+                      onClick={saveRoute}>
                 Save
               </Button>
             </Stack>
