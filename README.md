@@ -4,7 +4,7 @@ https://bikemapper-e210b.firebaseapp.com
 # Run the project
 ```
 git clone https://github.com/EJ-S/BikeMapper
-npm install vite leaflet react-leaflet
+npm install vite leaflet react-leaflet @mui/material @emotion/react @emotion/styled @mui/icons-material firebase react-router-dom
 npm run dev
 ```
 # Run This When Deploying New Version To Firebase Hosting
